@@ -2,20 +2,35 @@
 import './style.css'
 import api from '../../services/api';
 import User from './interface/interface';
-import { useEffect } from 'react';
+import { useEffect, useState, useRef} from 'react';
 
 
 function Home() {
-
-  let usuarios: User[] = []
+  const [usuarios, setUsuarios] = useState<User[]>([])
+  const inputName = useRef<HTMLInputElement>(null)
+  const inputIdade = useRef<HTMLInputElement>(null)
+  const inputEmail = useRef<HTMLInputElement>(null)
 
 async function getUsers() {
   try{
-    usuarios = await api.get('')
-    console.log(usuarios.data)
+    const usuariosApi = await api.get('')
+    setUsuarios(usuariosApi.data)
   }
   catch (error) {
     console.error('Erro ao buscar usuarios', error)
+  }
+}
+
+async function createUser() {
+  try{
+  await api.post('', {
+    nome: inputName.current?.value,
+    idade: inputIdade.current?.value,
+    email: inputEmail.current?.value,
+   })
+   
+  }catch{
+    console.error('Erro ao cadastrar usuario')
   }
 }
 
@@ -29,11 +44,11 @@ getUsers()
     <div className="container">
       <form action="">
         <h1>Cadastro de usuarios</h1>
-        <input type="text" name='nome' />
-        <input type="text" name='idade' />
-        <input type="text" name='email' />
+        <input placeholder='nome' type="text" name='nome' ref={inputName}/>
+        <input type="text" name='idade' ref={inputIdade}/>
+        <input type="text" name='email' ref={inputEmail}/>
         <input type="password" name='senha'/>
-        <button type='button'>Cadastrar</button>
+        <button type='button' onClick={createUser}>Cadastrar</button>
       </form>
 
       <div className="cards">
