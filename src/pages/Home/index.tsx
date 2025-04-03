@@ -1,13 +1,28 @@
 
 import './style.css'
+import api from '../../services/api';
+import User from './interface/interface';
+import { useEffect } from 'react';
+
 
 function Home() {
 
-  const usuarios = [
-    {id: 1, nome: 'joao', email:'joao@email.com', idade: 20},
-    {id: 1, nome: 'joao', email:'joao@email.com', idade: 20},
-    {id: 1, nome: 'joao', email:'joao@email.com', idade: 20},
-  ];
+  let usuarios: User[] = []
+
+async function getUsers() {
+  try{
+    usuarios = await api.get('')
+    console.log(usuarios.data)
+  }
+  catch (error) {
+    console.error('Erro ao buscar usuarios', error)
+  }
+}
+
+useEffect(() => {
+getUsers()
+},[])
+ 
 
 
   return (
